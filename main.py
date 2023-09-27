@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+import csv
 
 # url = "https://www.gismeteo.ru/diary/4618/2023/9/"
 #
@@ -20,3 +21,21 @@ with open("index.html") as file:
 
 soup = BeautifulSoup(src, "lxml")
 
+# table_data = soup.find("table").find("td", class_="first").text
+# table_temp = soup.find("table").find("td", class_="first_in_group positive").text
+# table_presure = soup.find("table").find("td", class_="first_in_group positive").find_next().text
+# table_wind = soup.find("table").find("span").text
+# print(table_data)
+# print(table_temp)
+# print(table_presure)
+# print(table_wind)
+
+table = soup.find("table").text
+with open('dataset.csv', 'w', newline='') as csvfile:
+    for item in table:
+        table_data = soup.find("table").find("td", class_="first").text
+        table_temp = soup.find("table").find("td", class_="first_in_group positive").text
+        table_presure = soup.find("table").find("td", class_="first_in_group positive").find_next().text
+        table_wind = soup.find("table").find("span").text
+        file_writer = csv.writer(csvfile, delimiter=",", lineterminator="\r")
+        file_writer.writerow([table_data, table_temp, table_presure, table_wind])
