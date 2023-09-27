@@ -21,21 +21,32 @@ with open("index.html") as file:
 
 soup = BeautifulSoup(src, "lxml")
 
-# table_data = soup.find("table").find("td", class_="first").text
-# table_temp = soup.find("table").find("td", class_="first_in_group positive").text
-# table_presure = soup.find("table").find("td", class_="first_in_group positive").find_next().text
-# table_wind = soup.find("table").find("span").text
-# print(table_data)
-# print(table_temp)
-# print(table_presure)
-# print(table_wind)
+table = soup.find("table").find("tbody").find_all("tr")
 
-table = soup.find("table").text
+data_table = []
+for item in table:
+    data_td = item.find_all('td')
+    day = data_td[0].text
+    temp_morning = data_td[1].text
+    presure_morning = data_td[2].text
+    wind_morning = data_td[5].text
+    temp_evening = data_td[6].text
+    presure_evening = data_td[7].text
+    wind_evening = data_td[10].text
+
+    data_table.append(
+        {
+            "day": day,
+            "temp_morning": temp_morning,
+            "presure_morning": presure_morning,
+            "wind_morning": wind_morning,
+            "temp_evening": temp_evening,
+            "presure_evening": presure_evening,
+            "wind_evening": wind_evening
+        }
+    )
+
 with open('dataset.csv', 'w', newline='') as csvfile:
-    for item in table:
-        table_data = soup.find("table").find("td", class_="first").text
-        table_temp = soup.find("table").find("td", class_="first_in_group positive").text
-        table_presure = soup.find("table").find("td", class_="first_in_group positive").find_next().text
-        table_wind = soup.find("table").find("span").text
+    for item in data_table:
         file_writer = csv.writer(csvfile, delimiter=",", lineterminator="\r")
-        file_writer.writerow([table_data, table_temp, table_presure, table_wind])
+        file_writer.writerow([item])
