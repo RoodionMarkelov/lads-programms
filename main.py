@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import csv
 
-for year in range(2022, 2024):
+for year in range(1997, 2024):
     for mouths in range(1, 13):
 
         url = "https://www.gismeteo.ru/diary/4618/" + str(year) + "/" + str(mouths) + "/"
@@ -14,10 +14,11 @@ for year in range(2022, 2024):
 
         req = requests.get(url, headers=headers)
         src = req.text
-
-
-        with open("index.html", "w") as file:
-            file.write(src)
+        try:
+            with open("cite.html", "w") as file:
+                file.write(src)
+        except Exception:
+            continue
 
             # with open("index.html") as file:
             #     src = file.read()
@@ -41,7 +42,7 @@ for year in range(2022, 2024):
 
             data_from_table.append(
                 {
-                    "day": data + "." + str(mouths) + "." + str(year),
+                    "data": data + "." + str(mouths) + "." + str(year),
                     "temp_morning": temp_morning,
                     "presure_morning": pres_morning,
                     "wind_morning": wind_morning,
@@ -54,4 +55,4 @@ for year in range(2022, 2024):
         with open('dataset.csv', 'a', newline='') as csvfile:
             for item in data_from_table:
                 file_writer = csv.writer(csvfile, delimiter=",", lineterminator="\r")
-                file_writer.writerow([item])
+                file_writer.writerow([item["data"], item["temp_morning"], item["presure_morning"], item["temp_evening"], item["presure_evening"], item["wind_evening"]])
