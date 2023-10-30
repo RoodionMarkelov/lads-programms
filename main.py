@@ -1,8 +1,9 @@
 from bs4 import BeautifulSoup
 import requests
 import csv
+import os
 
-# for year in range(2023, 2024):
+# for year in range(2020, 2024):
 #     for mouths in range(1, 13):
 #
 #         url = "https://www.gismeteo.ru/diary/4618/" + str(year) + "/" + str(mouths) + "/"
@@ -20,7 +21,7 @@ import csv
 #         except Exception:
 #             continue
 #
-#             # with open("index.html") as file:
+#             # with open("cite.html") as file:
 #             #     src = file.read()
 #
 #         soup = BeautifulSoup(src, "lxml")
@@ -30,6 +31,9 @@ import csv
 #             continue
 #
 #         data_from_table = []
+#         if(mouths < 10):
+#             moun = '0' + str(mouths)
+#         else: moun = str(mouths)
 #         for item in tab:
 #             data_from_table_td = item.find_all('td')
 #             data = data_from_table_td[0].text
@@ -42,7 +46,7 @@ import csv
 #
 #             data_from_table.append(
 #                 {
-#                     "data": str(year) + "-" + str(mouths) + "-" + data,
+#                     "data": str(year) + "-" + moun + "-" + data,
 #                     "temp_morning": temp_morning,
 #                     "presure_morning": pres_morning,
 #                     "wind_morning": wind_morning,
@@ -56,20 +60,27 @@ import csv
 #             for item in data_from_table:
 #                file_writer = csv.writer(csvfile, delimiter=",", lineterminator="\r")
 #                file_writer.writerow([item["data"], item["temp_morning"], item["presure_morning"], item["wind_morning"], item["temp_evening"], item["presure_evening"], item["wind_evening"]])
+#
+# with open('dataset.csv', newline='') as f:
+#     fieldnames = ['data', 'temp_morning', 'presure_morning', 'wind_morning', 'temp_evening', 'presure_evening', 'wind']
+#     reader = csv.DictReader(f, fieldnames=fieldnames)
+#     for row in reader:
+#         file_writer = csv.writer(open('dataset-number.csv', 'a', newline=''), lineterminator="\r")
+#         file_writer.writerow([row['data']])
+#         file_writer = csv.writer(open('dataset-meteodate.csv', 'a', newline=''), lineterminator="\r")
+#         file_writer.writerow([row['temp_morning'], row['presure_morning'], row['wind_morning'], row['temp_evening'], row['presure_evening'], row['wind']])
 
-with open('dataset.csv', newline='') as f:
-    fieldnames = ['data', 'temp_morning', 'presure_morning', 'wind_morning', 'temp_evening', 'presure_evening', 'wind']
-    reader = csv.DictReader(f, fieldnames=fieldnames)
-    for row in reader:
-        file_writer = csv.writer(open('dataset-number.csv', 'a', newline=''), lineterminator="\r")
-        file_writer.writerow([row['data']])
-        file_writer = csv.writer(open('dataset-meteodate.csv', 'a', newline=''), lineterminator="\r")
-        file_writer.writerow([row['temp_morning'], row['presure_morning'], row['wind_morning'], row['temp_evening'], row['presure_evening'], row['wind']])
+for year in range(2020, 2024):
+    outputfile = f'{year}0101_{year}1231.csv'
 
-with open('dataset.csv', newline='') as f:
-    fieldnames = ['data', 'temp_morning', 'presure_morning', 'wind_morning', 'temp_evening', 'presure_evening', 'wind']
-    reader = csv.DictReader(f, fieldnames=fieldnames)
-    for row in reader:
-        file_writer = csv.writer(open('dataset-number.csv', 'a', newline=''), lineterminator="\r")
-        file_writer.writerow([row['data']])
+    with open('dataset.csv', newline='') as f:
+        fieldnames = ['data', 'temp_morning', 'presure_morning', 'wind_morning', 'temp_evening', 'presure_evening',
+                      'wind_evening']
+        reader = csv.DictReader(f, fieldnames=fieldnames)
 
+        with open(outputfile, 'w', newline='') as file_writer:
+            writer = csv.writer(file_writer, lineterminator="\r")
+            for row in reader:
+                year_in_row = row['data'].split('-')[0]
+                if year_in_row == str(year):
+                    writer.writerow([row['data'], row["temp_morning"], row["presure_morning"], row["wind_morning"],row["temp_evening"], row["presure_evening"], row["wind_evening"]])
