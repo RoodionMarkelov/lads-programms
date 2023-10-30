@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import csv
 import os
+import datetime as dt
 
 # for year in range(2020, 2024):
 #     for mouths in range(1, 13):
@@ -70,17 +71,51 @@ import os
 #         file_writer = csv.writer(open('dataset-meteodate.csv', 'a', newline=''), lineterminator="\r")
 #         file_writer.writerow([row['temp_morning'], row['presure_morning'], row['wind_morning'], row['temp_evening'], row['presure_evening'], row['wind']])
 
-for year in range(2020, 2024):
-    outputfile = f'{year}0101_{year}1231.csv'
+# for year in range(2020, 2024):
+#     outputfile = f'{year}0101_{year}1231.csv'
+#
+#     with open('dataset.csv', newline='') as f:
+#         fieldnames = ['data', 'temp_morning', 'presure_morning', 'wind_morning', 'temp_evening', 'presure_evening',
+#                       'wind_evening']
+#         reader = csv.DictReader(f, fieldnames=fieldnames)
+#
+#         with open(outputfile, 'w', newline='') as file_writer:
+#             writer = csv.writer(file_writer, lineterminator="\r")
+#             for row in reader:
+#                 year_in_row = row['data'].split('-')[0]
+#                 if year_in_row == str(year):
+#                     writer.writerow([row['data'], row["temp_morning"], row["presure_morning"], row["wind_morning"],row["temp_evening"], row["presure_evening"], row["wind_evening"]])
 
-    with open('dataset.csv', newline='') as f:
-        fieldnames = ['data', 'temp_morning', 'presure_morning', 'wind_morning', 'temp_evening', 'presure_evening',
-                      'wind_evening']
-        reader = csv.DictReader(f, fieldnames=fieldnames)
+with open('dataset.csv', newline='') as file:
+    fieldnames = ['data', 'temp_morning', 'presure_morning', 'wind_morning', 'temp_evening', 'presure_evening',
+                  'wind_evening']
+    reader = csv.DictReader(file, fieldnames=fieldnames)
+    week_start = None
+    week_number = 1
+    week_data = []
+    for row in reader:
+        date = dt.datetime.strptime(row['data'], '%Y-%m-%d')
+        day_of_week = date.weekday()
 
-        with open(outputfile, 'w', newline='') as file_writer:
-            writer = csv.writer(file_writer, lineterminator="\r")
-            for row in reader:
-                year_in_row = row['data'].split('-')[0]
-                if year_in_row == str(year):
-                    writer.writerow([row['data'], row["temp_morning"], row["presure_morning"], row["wind_morning"],row["temp_evening"], row["presure_evening"], row["wind_evening"]])
+        if week_start is None:
+            week_start = date - dt.timedelta(days=day_of_week)
+
+        if day_of_week == 6:
+
+            output_folder = 'week'
+            os.makedirs(output_folder, exist_ok=True)
+            output_file = os.path.join(output_folder, f'dataset-week-{week_number}.csv')
+
+            with open(output_file, 'w', newline='') as file_writer:
+                writer = csv.writer(file_writer, lineterminator="\r")
+
+                for week_data in week_data:
+                    writer.writerow(week_data)
+
+            week_number += 1
+            week_start = None
+            week_data = []
+
+        week_data.append(
+            [row['data'], row["temp_morning"], row["presure_morning"], row["wind_morning"], row["temp_evening"],
+             row["presure_evening"], row["wind_evening"]])
