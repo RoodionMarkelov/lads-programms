@@ -114,37 +114,59 @@ import datetime as dt
 #             file.close()
 #             os.rename(input_file, output_file)
 
-with open('dataset.csv', newline='') as file:
-    fieldnames = ['data', 'temp_morning', 'presure_morning', 'wind_morning', 'temp_evening', 'presure_evening',
-                  'wind_evening']
-    reader = csv.DictReader(file, fieldnames=fieldnames)
-    week_start = None
-    week_number = 1
-    week_data = []
-    for row in reader:
-        date = dt.datetime.strptime(row['data'], '%Y-%m-%d')
-        day_of_week = date.weekday()
+# with open('dataset.csv', newline='') as file:
+#     fieldnames = ['data', 'temp_morning', 'presure_morning', 'wind_morning', 'temp_evening', 'presure_evening',
+#                   'wind_evening']
+#     reader = csv.DictReader(file, fieldnames=fieldnames)
+#     week_start = None
+#     week_number = 1
+#     week_data = []
+#     for row in reader:
+#         date = dt.datetime.strptime(row['data'], '%Y-%m-%d')
+#         day_of_week = date.weekday()
+#
+#         if week_start is None:
+#             week_start = date - dt.timedelta(days=day_of_week)
+#
+#         if day_of_week == 6:
+#
+#             output_folder = 'week'
+#             os.makedirs(output_folder, exist_ok=True)
+#             output_file = os.path.join(output_folder, f'week-{week_number}.csv')
+#
+#             with open(output_file, 'w', newline='') as file_writer:
+#                 writer = csv.writer(file_writer, lineterminator="\r")
+#
+#                 for week_data in week_data:
+#                     writer.writerow(week_data)
+#
+#             week_number += 1
+#             week_start = None
+#             week_data = []
+#
+#         week_data.append(
+#             [row['data'], row["temp_morning"], row["presure_morning"], row["wind_morning"], row["temp_evening"],
+#              row["presure_evening"], row["wind_evening"]])
 
-        if week_start is None:
-            week_start = date - dt.timedelta(days=day_of_week)
+def get_date_from_file(target_date, csvfile):
+    with (open(csvfile, newline="") as f):
+        fieldnames = ['data', 'temp_morning', 'presure_morning', 'wind_morning', 'temp_evening', 'presure_evening', 'wind_evening']
+        reader = csv.DictReader(f, fieldnames=fieldnames)
+        for row in reader:
+            date = row['data']
+            if (date == target_date):
+                return{
+                        "date": row['data'],
+                        "temp_morning": row['temp_morning'],
+                        "presure_morning": row['presure_morning'],
+                        "wind_morning": row['wind_morning'],
+                        "temp_evening": row['temp_evening'],
+                        "presure_evening": row['presure_evening'],
+                        "wind_evening": row['wind_evening']
+                }
+    return None
 
-        if day_of_week == 6:
-
-            output_folder = 'week'
-            os.makedirs(output_folder, exist_ok=True)
-            output_file = os.path.join(output_folder, f'week-{week_number}.csv')
-
-            with open(output_file, 'w', newline='') as file_writer:
-                writer = csv.writer(file_writer, lineterminator="\r")
-
-                for week_data in week_data:
-                    writer.writerow(week_data)
-
-            week_number += 1
-            week_start = None
-            week_data = []
-
-        week_data.append(
-            [row['data'], row["temp_morning"], row["presure_morning"], row["wind_morning"], row["temp_evening"],
-             row["presure_evening"], row["wind_evening"]])
-
+csvfile = 'years/20170101-20171231.csv'
+target_date = '2017-07-07'
+date = get_date_from_file(target_date, csvfile)
+print(date)
