@@ -16,30 +16,30 @@ def get_date_from_file(target_date, csvfile):
                         "wind_evening": row['wind_evening']
                 }
     return None
+if __name__ == '__main__':
+    csvfile1 = 'years/20170101-20171231.csv'
+    target_date1 = '2017-07-07'
+    date = get_date_from_file(target_date1, csvfile1)
+    if date is None:
+        print("Data is not exsist")
+    if date:
+        print("Data is:")
+        print(date)
 
-csvfile1 = 'years/20170101-20171231.csv'
-target_date1 = '2017-07-07'
-date = get_date_from_file(target_date1, csvfile1)
-if date is None:
-    print("Data is not exsist")
-if date:
-    print("Data is:")
-    print(date)
+    csvfile2 = 'dataset.csv'
+    target_date2 = '2013-07-07'
+    date2 = get_date_from_file(target_date2, csvfile2)
+    if date2 is None:
+        print("Data is not exsist")
+    if date2:
+        print("Data is:")
+        print(date2)
 
-csvfile2 = 'dataset.csv'
-target_date2 = '2013-07-07'
-date2 = get_date_from_file(target_date2, csvfile2)
-if date2 is None:
-    print("Data is not exsist")
-if date2:
-    print("Data is:")
-    print(date2)
-
-csvfile3 = 'week/week-15.csv'
-target_date3 = '2008-04-12'
-date1 = get_date_from_file(target_date3, csvfile3)
-if date1 is None:
-    print("Data is not exsist")
-if date1:
-    print("Data is:")
-    print(date1)
+    csvfile3 = 'week/week-15.csv'
+    target_date3 = '2008-04-12'
+    date1 = get_date_from_file(target_date3, csvfile3)
+    if date1 is None:
+        print("Data is not exsist")
+    if date1:
+        print("Data is:")
+        print(date1)

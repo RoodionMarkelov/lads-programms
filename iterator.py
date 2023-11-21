@@ -32,25 +32,27 @@ class Iterator:
         except StopIteration:
             raise StopIteration
 
-csv_file = 'dataset.csv'
-_iter = Iterator(csv_file)
-next_data = next(_iter)
-print(next_data)
-next_data = next(_iter)
-print(next_data)
-for data in _iter:
+if __name__ == '__main__':
+    csv_file = 'dataset.csv'
+    _iter = Iterator(csv_file)
+    next_data = next(_iter)
+    print(next_data)
+    next_data = next(_iter)
+    print(next_data)
+    for data in _iter:
+        try:
+            next_data = next(_iter)
+            if next_data:
+                print(next_data)
+            else:
+                print("Data over.")
+        except StopIteration:
+            print("Data over.")
     try:
         next_data = next(_iter)
         if next_data:
             print(next_data)
-        else:
-            print("Data over.")
     except StopIteration:
-        print("Data over.")
-try:
-    next_data = next(_iter)
-    if next_data:
-        print(next_data)
-except StopIteration:
-        print("Data over.")
+            print("Data over.")
+
 
