@@ -1,4 +1,6 @@
 import sys
+import xandy, years, weeks, function, iterator
+
 from PyQt5.QtWidgets import (QWidget, QToolTip,
     QPushButton, QApplication, QDesktopWidget)
 from PyQt5.QtGui import QIcon, QFont
@@ -42,7 +44,5 @@ class Window(QWidget):
 
 
 if __name__ == '__main__':
+    xandy.divide_on_x_y('dataset.csv')
 
-    app = QApplication(sys.argv)
-    window = Window()
-    sys.exit(app.exec_())
