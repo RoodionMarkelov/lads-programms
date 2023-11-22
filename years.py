@@ -17,7 +17,7 @@ def divide_by_years(csv_file):
                     year_in_row = row['data'].split('-')[0]
                     if year_in_row == str(year):
                         writer.writerow([row['data'], row["temp_morning"], row["presure_morning"], row["wind_morning"],row["temp_evening"], row["presure_evening"], row["wind_evening"]])
-
+    return  None
 
     for year in range(1997, 2024):
         input_file = f'years/{year}.csv'

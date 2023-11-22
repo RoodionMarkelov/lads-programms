@@ -35,24 +35,13 @@ class Iterator:
 if __name__ == '__main__':
     csv_file = 'dataset.csv'
     _iter = Iterator(csv_file)
-    next_data = next(_iter)
+    next_data = _iter.__next__()
     print(next_data)
-    next_data = next(_iter)
+    next_data =  _iter.__next__()
     print(next_data)
-    for data in _iter:
-        try:
-            next_data = next(_iter)
-            if next_data:
-                print(next_data)
-            else:
-                print("Data over.")
-        except StopIteration:
-            print("Data over.")
-    try:
-        next_data = next(_iter)
-        if next_data:
-            print(next_data)
-    except StopIteration:
-            print("Data over.")
+    next_data = _iter.__next__()
+    print(next_data)
+    next_data = _iter.__next__()
+    print(next_data)
 
 

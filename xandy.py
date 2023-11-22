@@ -9,6 +9,7 @@ def divide_on_x_y(csv_file):
             file_writer.writerow([row['data']])
             file_writer = csv.writer(open('dataset-meteodata.csv', 'a', newline=''), lineterminator="\r")
             file_writer.writerow([row['temp_morning'], row['presure_morning'], row['wind_morning'], row['temp_evening'], row['presure_evening'], row['wind']])
+    return None
 
 if __name__ == '__main__':
     divide_on_x_y('dataset.csv')

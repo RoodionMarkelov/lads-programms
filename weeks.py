@@ -50,6 +50,7 @@ def divide_by_week(csv_file):
             week_data.append(
                 [row['data'], row["temp_morning"], row["presure_morning"], row["wind_morning"], row["temp_evening"],
                 row["presure_evening"], row["wind_evening"]])
+    return None
 
 
 if __name__ == '__main__':
