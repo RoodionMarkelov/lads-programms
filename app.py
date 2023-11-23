@@ -1,7 +1,7 @@
 import sys
 import xandy, years, weeks, function, iterator
 from PyQt5.QtWidgets import (QWidget, QToolTip, QPushButton, QApplication,
-                             QDesktopWidget, QInputDialog, QLineEdit, QFileDialog, QLabel)
+                             QDesktopWidget, QInputDialog, QLineEdit, QFileDialog, QLabel, QMessageBox)
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtCore import QCoreApplication
 
@@ -64,7 +64,7 @@ class Window(QWidget):
 
         qbtn = QPushButton('Quit', self)
         qbtn.setToolTip('Click on the button to exit.')
-        qbtn.clicked.connect(QCoreApplication.instance().quit)
+        qbtn.clicked.connect(self._quit)
         qbtn.resize(qbtn.sizeHint())
         qbtn.move(350, 400)
 
@@ -117,6 +117,13 @@ class Window(QWidget):
                     self.pres_evening.setText("")
                     self.wind_evening.setText("")
 
+    def closeEvent(self, event):
+        reply = QMessageBox.question(self, 'Message', "Are you sure to quit?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            event.accept()
+        else:
+            event.ignore()
+
     def create_iterator(self):
         csv_file = self.get_file()
         self._iterator = iterator.Iterator(csv_file)
@@ -129,9 +136,11 @@ class Window(QWidget):
             self.label.move(200, 50)
             self.print_dict(next_data)
         else:
-            self.label.setText("You have to create an iterator for the file.")
-            self.label.adjustSize()
-
+            reply = QMessageBox.question(self, 'Message', "You have to create an iterator for the file. Are you want to create iterator?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
+            if reply == QMessageBox.Yes:
+                self.create_iterator()
+            else:
+                return
     def get_file(self):
         folderpath = QFileDialog.getExistingDirectory(self, 'Select Folder')
         file_name = QFileDialog.getOpenFileName(self, 'Choose file', folderpath, 'CSV File (*.csv)')
@@ -163,6 +172,13 @@ class Window(QWidget):
         self.wind_evening.adjustSize()
         self.wind_evening.move(200, 260)
 
+    def _quit(self):
+        reply = QMessageBox.question(self, 'Message', "Are you sure to quit?", QMessageBox.Yes | QMessageBox.No,
+                                     QMessageBox.No)
+        if reply == QMessageBox.Yes:
+            QApplication.instance().quit()
+        else:
+            return
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
