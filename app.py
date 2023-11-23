@@ -9,6 +9,7 @@ class Window(QWidget):
     def __init__(self):
         super().__init__()
 
+        self._iterator = None
         QToolTip.setFont(QFont('SansSerif', 14))
 
         self.setToolTip('This is a <b>QWidget</b> widget')
@@ -49,20 +50,25 @@ class Window(QWidget):
         btn4.resize(btn4.sizeHint())
         btn4.move(50, 200)
 
-        btn5 = QPushButton('find _next()', self)
-        btn5.setToolTip('Click on the button to search data for next date')
-        btn5.clicked.connect(self._window_next)
-        btn5.resize(btn1.sizeHint())
+        btn5 = QPushButton('create_iterator', self)
+        btn5.setToolTip('Click on the button to create iterator for csv_file')
+        btn5.clicked.connect(self.create_iterator)
+        btn5.resize(btn5.sizeHint())
         btn5.move(50, 250)
 
+        btn6 = QPushButton('Next data.', self)
+        btn6.setToolTip('Click on the button to get next data in current file')
+        btn6.clicked.connect(self._window_next)
+        btn6.resize(btn6.sizeHint())
+        btn6.move(50, 300)
 
         qbtn = QPushButton('Quit', self)
         qbtn.setToolTip('Click on the button to exit.')
         qbtn.clicked.connect(QCoreApplication.instance().quit)
         qbtn.resize(qbtn.sizeHint())
-        qbtn.move(300, 300)
+        qbtn.move(350, 400)
 
-        self.resize(400, 400)
+        self.resize(450, 450)
         self.center()
         self.setWindowTitle('app')
         self.setWindowIcon(QIcon('web.png'))
@@ -88,8 +94,8 @@ class Window(QWidget):
         weeks.divide_by_week(csv_file)
 
     def _find_date_from_file(self):
-        date, okPressed = QInputDialog.getText(self, "Get text", "Input date (format year-mouth-day or ****-**-**):", QLineEdit.Normal, "")
-        if okPressed and date != '':
+        date, ok_pressed = QInputDialog.getText(self, "Get text", "Input date (format year-mouth-day or ****-**-**):", QLineEdit.Normal, "")
+        if ok_pressed and date != '':
             target_date = date
             file_name = self.get_file()
             if file_name:
@@ -111,14 +117,21 @@ class Window(QWidget):
                     self.pres_evening.setText("")
                     self.wind_evening.setText("")
 
-    def _window_next(self):
+    def create_iterator(self):
         csv_file = self.get_file()
-        _iter = iterator.Iterator(csv_file)
-        next_data = _iter.__next__()
-        self.label.setText("Next data in csv_file:")
-        self.label.adjustSize()
-        self.label.move(200, 50)
-        self.print_dict(next_data)
+        self._iterator = iterator.Iterator(csv_file)
+
+    def _window_next(self):
+        if self._iterator is not None:
+            next_data = self._iterator.__next__()
+            self.label.setText("Next data in csv_file:")
+            self.label.adjustSize()
+            self.label.move(200, 50)
+            self.print_dict(next_data)
+        else:
+            self.label.setText("You have to create an iterator for the file.")
+            self.label.adjustSize()
+
     def get_file(self):
         folderpath = QFileDialog.getExistingDirectory(self, 'Select Folder')
         file_name = QFileDialog.getOpenFileName(self, 'Choose file', folderpath, 'CSV File (*.csv)')
