@@ -34,13 +34,13 @@ class Window(QWidget):
 
         btn2 = QPushButton('Divide by years', self)
         btn2.setToolTip('Click on the button to divide csv_file by years.')
-        btn2.clicked.connect(self._divide_on_years)
+        btn2.clicked.connect(self._divide_by_years)
         btn2.resize(btn2.sizeHint())
         btn2.move(50, 100)
 
         btn3 = QPushButton('Divide by weeks', self)
         btn3.setToolTip('Click on the button to divide csv_file by weeks.')
-        btn3.clicked.connect(self._divide_on_week)
+        btn3.clicked.connect(self._divide_by_week)
         btn3.resize(btn3.sizeHint())
         btn3.move(50, 150)
 
@@ -85,13 +85,14 @@ class Window(QWidget):
         csv_file = self.get_file()
         xandy.divide_on_x_y(csv_file)
 
-    def _divide_on_years(self):
+    def _divide_by_years(self):
         csv_file = self.get_file()
         years.divide_by_years(csv_file)
 
-    def _divide_on_week(self):
+    def _divide_by_week(self):
         csv_file = self.get_file()
-        weeks.divide_by_week(csv_file)
+        grouped_data = weeks.group_by_week(csv_file)
+        weeks.divide_by_weeks(grouped_data)
 
     def _find_date_from_file(self):
         date, ok_pressed = QInputDialog.getText(self, "Get text", "Input date (format year-mouth-day or ****-**-**):", QLineEdit.Normal, "")
@@ -130,11 +131,24 @@ class Window(QWidget):
 
     def _window_next(self):
         if self._iterator is not None:
-            next_data = self._iterator.__next__()
-            self.label.setText("Next data in csv_file:")
-            self.label.adjustSize()
-            self.label.move(200, 50)
-            self.print_dict(next_data)
+            try:
+                next_data = self._iterator.__next__()
+                self.label.setText("Next data in csv_file:")
+                self.label.adjustSize()
+                self.label.move(200, 50)
+                self.print_dict(next_data)
+            except Exception:
+                self.label.setText("Data is over.")
+                self.label.adjustSize()
+                self.label.move(200, 50)
+                self.date.setText("")
+                self.temp_morning.setText("")
+                self.pres_morning.setText("")
+                self.wind_morning.setText("")
+                self.temp_evening.setText("")
+                self.pres_evening.setText("")
+                self.wind_evening.setText("")
+
         else:
             reply = QMessageBox.question(self, 'Message', "You have to create an iterator for the file. Are you want to create iterator?", QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
             if reply == QMessageBox.Yes:

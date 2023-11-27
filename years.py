@@ -1,7 +1,8 @@
 import csv
 import os
 
-def divide_by_years(csv_file):
+def divide_by_years(csv_file:str):
+    '''Divide the source csv_file by years. Return None'''
     for year in range(1997, 2024):
         output_file = f'{year}.csv'
         output_folder = 'years'
@@ -17,7 +18,7 @@ def divide_by_years(csv_file):
                     year_in_row = row['data'].split('-')[0]
                     if year_in_row == str(year):
                         writer.writerow([row['data'], row["temp_morning"], row["presure_morning"], row["wind_morning"],row["temp_evening"], row["presure_evening"], row["wind_evening"]])
-    return  None
+
 
     for year in range(1997, 2024):
         input_file = f'years/{year}.csv'
@@ -42,6 +43,6 @@ def divide_by_years(csv_file):
                 output_file = f'years/{year}{first_date}-{year}{last_date}.csv'
                 file.close()
                 os.rename(input_file, output_file)
-
+    return None
 if __name__ == '__main__':
     divide_by_years('dataset.csv')

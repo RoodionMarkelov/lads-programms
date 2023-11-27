@@ -1,5 +1,6 @@
 import csv
-def get_date_from_file(target_date, csvfile):
+def get_date_from_file(target_date:str, csvfile:str):
+    '''Returns data from the file by the transmitted date'''
     with (open(csvfile, newline="") as f):
         fieldnames = ['date', 'temp_morning', 'presure_morning', 'wind_morning', 'temp_evening', 'presure_evening', 'wind_evening']
         reader = csv.DictReader(f, fieldnames=fieldnames)

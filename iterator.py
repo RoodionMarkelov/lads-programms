@@ -1,7 +1,7 @@
 import csv
 
 class Iterator:
-    def __init__(self, csv_file):
+    def __init__(self, csv_file:str):
         self.csv_file = csv_file
         self._iter = self.generator()
 
@@ -37,7 +37,7 @@ if __name__ == '__main__':
     _iter = Iterator(csv_file)
     next_data = _iter.__next__()
     print(next_data)
-    next_data =  _iter.__next__()
+    next_data = _iter.__next__()
     print(next_data)
     next_data = _iter.__next__()
     print(next_data)
