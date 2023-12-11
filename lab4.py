@@ -141,8 +141,14 @@ def get_graph_for_date(DataFrame: pd.DataFrame, mounth: int, year: int):
     DataFrame["Month"] = DataFrame["date"].dt.month
     DataFrame["Day"] = DataFrame["date"].dt.day
     data_for_date = DataFrame[(DataFrame["Year"] == year) & (df["Month"] == mounth)]
-    median_temp = data_for_date["temp_morning"].median()
-    mean_temp = data_for_date["temp_morning"].mean()
+    median_morning_temp = data_for_date["temp_morning"].median()
+    mean_morning_temp = data_for_date["temp_morning"].mean()
+    median_morning_f_temp = data_for_date["temp_morning_f"].median()
+    mean_morning_f_temp = data_for_date["temp_morning_f"].mean()
+    median_evening_temp = data_for_date["temp_evening"].median()
+    mean_evening_temp = data_for_date["temp_evening"].mean()
+    median_evening_f_temp = data_for_date["temp_evening_f"].median()
+    mean_evening_f_temp = data_for_date["temp_evening_f"].mean()
     fig = plt.figure(figsize=(25, 25))
     plt.title("Изменение температуры для переданной даты")
     fig.add_subplot(2, 2, 1)
@@ -151,8 +157,8 @@ def get_graph_for_date(DataFrame: pd.DataFrame, mounth: int, year: int):
         data_for_date["temp_morning"],
         label="Температура днем по Цельсию",
     )
-    plt.axhline(median_temp, color="red", linestyle="--", label="Медиана")
-    plt.axhline(mean_temp, color="green", linestyle="--", label="Среднее")
+    plt.axhline(median_morning_temp, color="red", linestyle="--", label="Медиана")
+    plt.axhline(mean_morning_temp, color="green", linestyle="--", label="Среднее")
     plt.legend(loc=1, prop={"size": 5})
     plt.xlabel("День")
     plt.ylabel("Температура")
@@ -163,8 +169,8 @@ def get_graph_for_date(DataFrame: pd.DataFrame, mounth: int, year: int):
         data_for_date["temp_morning_f"],
         label="Температура днем по Фаренгейту",
     )
-    plt.axhline(median_temp, color="red", linestyle="--", label="Медиана")
-    plt.axhline(mean_temp, color="green", linestyle="--", label="Среднее")
+    plt.axhline(median_morning_f_temp, color="red", linestyle="--", label="Медиана")
+    plt.axhline(mean_morning_f_temp, color="green", linestyle="--", label="Среднее")
     plt.legend(loc=1, prop={"size": 5})
     plt.xlabel("День")
     plt.ylabel("Температура")
@@ -175,8 +181,8 @@ def get_graph_for_date(DataFrame: pd.DataFrame, mounth: int, year: int):
         data_for_date["temp_evening"],
         label="Температура ночью по Цельсию",
     )
-    plt.axhline(median_temp, color="red", linestyle="--", label="Медиана")
-    plt.axhline(mean_temp, color="green", linestyle="--", label="Среднее")
+    plt.axhline(median_evening_temp, color="red", linestyle="--", label="Медиана")
+    plt.axhline(mean_evening_temp, color="green", linestyle="--", label="Среднее")
     plt.legend(loc=1, prop={"size": 5})
     plt.xlabel("День")
     plt.ylabel("Температура")
@@ -187,8 +193,8 @@ def get_graph_for_date(DataFrame: pd.DataFrame, mounth: int, year: int):
         data_for_date["temp_evening_f"],
         label="Температура ночью по Фаренгейту",
     )
-    plt.axhline(median_temp, color="red", linestyle="--", label="Медиана")
-    plt.axhline(mean_temp, color="green", linestyle="--", label="Среднее")
+    plt.axhline(median_evening_f_temp, color="red", linestyle="--", label="Медиана")
+    plt.axhline(mean_evening_f_temp, color="green", linestyle="--", label="Среднее")
     plt.legend(loc=1, prop={"size": 5})
     plt.xlabel("День")
     plt.ylabel("Температура")
