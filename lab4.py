@@ -3,9 +3,14 @@ import datetime
 import matplotlib.pyplot as plt
 
 
-def create_DataFrame(csv_file):
+def create_DataFrame(csv_file: str)-> pd.DataFrame:
+    """
+    Создание pd.DataFrame.
+    :param csv_file:
+    :return:
+    """
     DataFrame = pd.read_csv(
-        "dataset.csv",
+        csv_file,
         names=[
             "date",
             "temp_morning",
@@ -26,23 +31,44 @@ def create_DataFrame(csv_file):
     return DataFrame
 
 
-def data_processing(DataFrame):
+def data_processing(DataFrame: pd.DataFrame)-> pd.DataFrame:
+    """
+    Обработка значений 'nan' в pd.DataFrame. Заменяет 'nan' на среднее значение в колонке.
+    :param DataFrame:
+    :return pd.DataFrame:
+    """
     average = round((DataFrame["temp_morning"].mean() + DataFrame["temp_evening"].mean()) / 2, 1)
     DataFrame = DataFrame.fillna(average)
     return DataFrame
 
 
-def temp_to_fahrenheit(temperature):
+def temp_to_fahrenheit(temperature: float)->float:
+    """
+    Переводит температуры из Градусов Цельсия в градусы Фаренгейта.
+    :param temperature:
+    :return float:
+    """
     return (float(temperature) * 9 / 5) + 32
 
 
-def create_temp_f(DataFrame):
+def create_temp_f(DataFrame: pd.DataFrame)-> pd.DataFrame:
+    """
+    Создает колонки со значениями температуры по шкале Фаренгейта.
+    :param DataFrame:
+    :return pd.DataFrame:
+    """
     DataFrame["temp_morning_f"] = DataFrame["temp_morning"].apply(temp_to_fahrenheit)
     DataFrame["temp_evening_f"] = DataFrame["temp_evening"].apply(temp_to_fahrenheit)
     return DataFrame
 
 
-def get_stats(DataFrame: pd.DataFrame, column: str):
+def get_stats(DataFrame: pd.DataFrame, column: str)-> None:
+    """
+    Возращает статиску по колонке.
+    :param DataFrame:
+    :param column:
+    :return None:
+    """
     try:
         return print(DataFrame[column].describe())
     except KeyError:
@@ -50,12 +76,27 @@ def get_stats(DataFrame: pd.DataFrame, column: str):
     return None
 
 
-def filter_by_temp(DataFrame, column, temp):
+def filter_by_temp(DataFrame: pd.DataFrame, column: str, temp: float)-> pd.DataFrame:
+    """
+    Фильтрует pd.DataFrame по переданной температуре.
+    :param DataFrame:
+    :param column:
+    :param temp:
+    :return pd.DataFrame:
+    """
     DataFrame = DataFrame[DataFrame[column] >= temp]
     return DataFrame
 
 
-def filter_by_date(DataFrame, date_start, date_end):
+def filter_by_date(DataFrame: pd.DataFrame, date_start: str, date_end: str)-> pd.DataFrame:
+
+    """
+    Фильтрует pd.DataFrame по переданному диапозону даты.
+    :param DataFrame:
+    :param date_start:
+    :param date_end:
+    :return pd.DataFrame:
+    """
     DataFrame["date"] = pd.to_datetime(DataFrame["date"])
     date1 = datetime.datetime.strptime(date_start, "%Y-%m-%d")
     date2 = datetime.datetime.strptime(date_end, "%Y-%m-%d")
@@ -65,7 +106,12 @@ def filter_by_date(DataFrame, date_start, date_end):
     ]
 
 
-def group_by_mounth(DataFrame):
+def group_by_mounth(DataFrame: pd.DataFrame):
+    """
+    Групирует pd.DataFrame по месяцам. Возвращает list.
+    :param DataFrame:
+    :return list:
+    """
     DataFrame["date"] = pd.to_datetime(DataFrame["date"])
     mounth_data = []
     for name, group in df.set_index("date").groupby(pd.Grouper(freq="M")):
@@ -73,7 +119,13 @@ def group_by_mounth(DataFrame):
     return mounth_data
 
 
-def calculate_average(DataFrame, column):
+def calculate_average(DataFrame: pd.DataFrame, column: str):
+    """
+    Подсчитывает среденнее по месяцам. Возвращает list.
+    :param DataFrame:
+    :param column:
+    :return list:
+    """
     month_data = group_by_mounth(DataFrame)
     averages = []
     for mounth_df in month_data:
@@ -83,6 +135,11 @@ def calculate_average(DataFrame, column):
 
 
 def get_graph(DataFrame: pd.DataFrame):
+    """
+    Рисует графики для всего периода.
+    :param DataFrame:
+    :return None:
+    """
     x = DataFrame["date"]
     y1 = DataFrame["temp_morning"]
     y2 = DataFrame["temp_morning_f"]
@@ -137,6 +194,13 @@ def get_graph(DataFrame: pd.DataFrame):
 
 
 def get_graph_for_date(DataFrame: pd.DataFrame, mounth: int, year: int):
+    """
+    Рисует график для pd.DataFrame для заданного периода.
+    :param DataFrame:
+    :param mounth:
+    :param year:
+    :return None:
+    """
     DataFrame["Year"] = DataFrame["date"].dt.year
     DataFrame["Month"] = DataFrame["date"].dt.month
     DataFrame["Day"] = DataFrame["date"].dt.day
